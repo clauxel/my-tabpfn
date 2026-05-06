@@ -1,0 +1,57 @@
+# Default-deny for a public repository.
+*
+
+# Repository metadata and docs.
+!.gitignore
+!.gitattributes
+!README.md
+!package.json
+!package-lock.json
+!index.html
+!wrangler.toml
+!vite.config.ts
+!tsconfig.json
+!tsconfig.app.json
+!tsconfig.node.json
+
+# GitHub automation.
+!.github/
+!.github/**
+
+# Public assets.
+!public/
+!public/**
+
+# Current application source only.
+!src/
+!src/main.tsx
+!src/App.tsx
+!src/styles.css
+!src/vite-env.d.ts
+!src/content/
+!src/content/keyword-pages.ts
+!src/lib/
+!src/lib/dataset-fit.ts
+!src/lib/routing.ts
+!src/lib/seo.ts
+!scripts/
+!scripts/postbuild.mjs
+!functions/
+!functions/**
+
+# Cloudflare Worker.
+!worker/
+!worker/index.js
+
+# Generated and private files.
+node_modules/
+dist/
+.wrangler/
+.runtime/
+.python_packages/
+.codex_tmp*
+.env
+.env.*
+*.log
+*.tsbuildinfo
+.DS_Store
