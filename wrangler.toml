@@ -1,6 +1,10 @@
 name = "my-tabpfn"
 main = "worker/index.js"
-compatibility_date = "2026-05-07"
+compatibility_date = "2026-05-06"
+routes = [
+  { pattern = "tabpfn.site/*", zone_name = "tabpfn.site" },
+  { pattern = "www.tabpfn.site/*", zone_name = "tabpfn.site" }
+]
 
 [vars]
 CREEM_API_BASE = "https://api.creem.io"
