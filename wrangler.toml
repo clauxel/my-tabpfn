@@ -1,6 +1,7 @@
 name = "my-tabpfn"
 main = "worker/index.js"
 compatibility_date = "2026-05-06"
+workers_dev = true
 routes = [
   { pattern = "tabpfn.site/*", zone_name = "tabpfn.site" },
   { pattern = "www.tabpfn.site/*", zone_name = "tabpfn.site" }
