@@ -1,3 +1,5 @@
+import { handleAnalyticsRequest } from './analytics.js'
+import { handleNowPaymentsCheckout } from './nowpayments.js'
 const CANONICAL_ORIGIN = 'https://tabpfn.site'
 const CANONICAL_HOST = 'tabpfn.site'
 const LEGACY_HOSTS = new Set(['www.tabpfn.site'])
@@ -300,9 +302,21 @@ Sitemap: ${CANONICAL_ORIGIN}/sitemap.xml
   return new Response(body, { status: 200, headers })
 }
 
+function noIndexNotFoundResponse(request) {
+  const headers = securityHeaders(request)
+  headers.set('Content-Type', 'text/html; charset=utf-8')
+  headers.set('Cache-Control', 'no-store')
+  headers.set('X-Robots-Tag', 'noindex, nofollow')
+  return new Response('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Page not found</title></head><body><main><h1>Page not found</h1><p>This URL is not a public page for this product.</p></main></body></html>', { status: 404, headers })
+}
+
 async function fetchAsset(request, env) {
   if (env?.ASSETS?.fetch) {
     const requestUrl = new URL(request.url)
+
+  if (requestUrl.pathname === '/api/analytics/events') {
+    return handleAnalyticsRequest(request, env, { siteKey: 'tabpfn' })
+  }
     const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
 
     if (staticAssetPaths.has(normalizedPath)) {
@@ -323,6 +337,18 @@ async function fetchAsset(request, env) {
 
 export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
+
+  if (requestUrl.pathname === '/api/nowpayments-checkout') {
+    return handleNowPaymentsCheckout(request, env, {
+      plans: planCatalog,
+      defaultPlanId: 'pro',
+      siteName: 'TabPFN',
+      siteKey: 'tabpfn',
+      annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
+        ? ANNUAL_DISCOUNT_MULTIPLIER
+        : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
+    })
+  }
 
   if (requestUrl.pathname === '/api/runtime') return handleRuntime(requestUrl)
   if (requestUrl.pathname === '/api/checkout') return handleCheckout(request, env, requestUrl)
