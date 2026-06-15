@@ -1,0 +1,21 @@
+# TabPFN Studio
+
+Use a browser-first CSV fit scan to choose between TabPFN v2, tabpfn-client, TabPFN-TS, the R wrapper, or a scaling path before you commit to setup or payment.
+
+Website: https://tabpfn.site/
+Pricing: https://tabpfn.site/pricing/
+Checkout: https://tabpfn.site/checkout/
+Support: support@aigeamy.com
+Type: Hosted SaaS workflow product
+
+Problem:
+- Teams need a quotable product definition, pricing path, evidence trail, and checkout route.
+
+Solution:
+- TabPFN Studio provides a hosted workflow with public pricing, structured evidence, support contact, and report or receipt outputs.
+
+Useful pages:
+- Home: https://tabpfn.site/
+- Pricing: https://tabpfn.site/pricing/
+- Resources: https://tabpfn.site/resources/
+- Sitemap: https://tabpfn.site/sitemap.xml

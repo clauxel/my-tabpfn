@@ -62,7 +62,7 @@ function jsonResponse(data, status = 200) {
 }
 
 function maybeRedirectToCanonical(requestUrl) {
-  if (requestUrl.protocol !== 'https:' || LEGACY_HOSTS.has(requestUrl.hostname)) {
+  if (LEGACY_HOSTS.has(requestUrl.hostname)) {
     const redirectUrl = new URL(requestUrl)
     redirectUrl.protocol = 'https:'
     redirectUrl.hostname = CANONICAL_HOST
@@ -246,7 +246,8 @@ async function handleCheckout(request, env, requestUrl) {
     })
     const checkoutUrl = extractCheckoutUrl(checkout)
     if (!checkoutUrl) throw new Error('Creem did not return a checkout URL.')
-    return jsonResponse({ ok: true, checkoutUrl })
+    return jsonResponse({ ok: true,
+      paymentProvider: 'hosted', checkoutUrl })
   } catch {
     return jsonResponse({ ok: false, error: 'Secure checkout could not be created yet.' }, 502)
   }
@@ -321,7 +322,7 @@ async function fetchAsset(request, env) {
 
     if (staticAssetPaths.has(normalizedPath)) {
       const assetUrl = new URL(request.url)
-      assetUrl.pathname = normalizedPath === '/' ? '/index.html' : `${normalizedPath}/index.html`
+      assetUrl.pathname = normalizedPath === '/' ? '/' : `${normalizedPath}/`
       const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
       if (assetResponse.status !== 404) return assetResponse
     }

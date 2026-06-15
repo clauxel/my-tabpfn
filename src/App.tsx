@@ -31,6 +31,7 @@ import {
 } from './lib/dataset-fit'
 import { buildSeoDocument, syncSeoDocument } from './lib/seo'
 import { deriveRouteView, normalizePathname, scrollToHashTarget, type RouteView } from './lib/routing'
+import { initializeAnalytics, syncAnalyticsPage } from './lib/analytics'
 
 const defaultPublicAppOrigin = 'https://tabpfn.site'
 
@@ -161,8 +162,8 @@ async function readJsonResponse<T>(response: Response): Promise<T | null> {
   }
 }
 
-async function createCheckoutSession(planId: PlanId, billing: Billing) {
-  const response = await fetch('/api/checkout', {
+async function createCheckoutSession(planId: PlanId, billing: Billing, endpoint = '/api/checkout') {
+  const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ planId, billing }),
@@ -230,6 +231,15 @@ function usePathnameSignal() {
 
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
+
+
+  useEffect(() => {
+    initializeAnalytics()
+  }, [])
+
+  useEffect(() => {
+    syncAnalyticsPage(pathname, search)
+  }, [pathname, search])
 
   useEffect(() => {
     const onPop = () => {
@@ -388,7 +398,7 @@ export default function App() {
     [runScan],
   )
 
-  const startHostedCheckout = useCallback(async (planId: PlanId, nextBilling: Billing, loadingKey: string) => {
+  const startHostedCheckout = useCallback(async (planId: PlanId, nextBilling: Billing, loadingKey: string, provider = 'creem') => {
     setSelectedPlanId(planId)
     setBilling(nextBilling)
     setCheckoutLoadingKey(loadingKey)
@@ -397,7 +407,7 @@ export default function App() {
     const popup = openCenteredCheckoutWindow()
 
     try {
-      const url = await createCheckoutSession(planId, nextBilling)
+      const url = await createCheckoutSession(planId, nextBilling, provider === 'nowpayments' ? '/api/nowpayments-checkout' : '/api/checkout')
       sendPopupToCheckout(popup, url)
       setCheckoutModal({ planId, billing: nextBilling, loadingKey, status: 'popup', checkoutUrl: url })
     } catch {
@@ -891,6 +901,14 @@ export default function App() {
                       ? 'Start Starter annual'
                       : ctaPrimary}
               </button>
+                <button
+                  type="button"
+                  className="tpf-btn tpf-btn-ghost"
+                  onClick={() => void startHostedCheckout(plan.id, billing, `${loadingKey}-wallet`, 'nowpayments')}
+                  disabled={checkoutLoadingKey !== null}
+                >
+                  {checkoutLoadingKey === `${loadingKey}-wallet` ? 'Opening USDC wallet...' : 'Pay with USDC Wallet'}
+                </button>
               {selectedPlanId === plan.id ? <span className="tpf-plan-selected">Selected</span> : null}
             </article>
           )
