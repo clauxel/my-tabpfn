@@ -107,7 +107,7 @@ const workflowCards = [
   },
   {
     title: 'Payment without losing focus',
-    body: 'Creem checkout opens in a centered popup, keeps the page in place, and returns buyers to the homepage after success.',
+    body: 'Polar checkout opens in a centered popup, keeps the page in place, and returns buyers to the homepage after success.',
     icon: <ShieldCheck size={20} />,
   },
 ]
@@ -398,7 +398,7 @@ export default function App() {
     [runScan],
   )
 
-  const startHostedCheckout = useCallback(async (planId: PlanId, nextBilling: Billing, loadingKey: string, provider = 'creem') => {
+  const startHostedCheckout = useCallback(async (planId: PlanId, nextBilling: Billing, loadingKey: string, provider = 'polar') => {
     setSelectedPlanId(planId)
     setBilling(nextBilling)
     setCheckoutLoadingKey(loadingKey)
@@ -407,7 +407,7 @@ export default function App() {
     const popup = openCenteredCheckoutWindow()
 
     try {
-      const url = await createCheckoutSession(planId, nextBilling, provider === 'nowpayments' ? '/api/nowpayments-checkout' : '/api/checkout')
+      const url = await createCheckoutSession(planId, nextBilling, provider === 'polar' ? '/api/polar-checkout' : '/api/checkout')
       sendPopupToCheckout(popup, url)
       setCheckoutModal({ planId, billing: nextBilling, loadingKey, status: 'popup', checkoutUrl: url })
     } catch {
@@ -493,24 +493,24 @@ export default function App() {
             <X size={18} />
           </button>
           {checkoutUrl ? (
-            <div className="tpf-creem-popup-copy">
+            <div className="tpf-polar-popup-copy">
               <p className="tpf-eyebrow">Secure checkout</p>
-              <h2 id="checkout-title">Creem checkout opened.</h2>
+              <h2 id="checkout-title">Polar checkout opened.</h2>
               <p className="tpf-muted">
-                Complete payment in the centered Creem window. This page stays open and returns to the homepage after success.
+                Complete payment in the centered Polar window. This page stays open and returns to the homepage after success.
               </p>
               <a className="tpf-btn tpf-btn-primary" href={checkoutUrl} target="_blank" rel="noreferrer noopener">
-                Reopen Creem checkout
+                Reopen Polar checkout
               </a>
             </div>
           ) : checkoutModal.status === 'loading' ? (
-            <div className="tpf-creem-loading" aria-live="polite">
+            <div className="tpf-polar-loading" aria-live="polite">
               <span />
-              Opening Creem checkout...
+              Opening Polar checkout...
             </div>
           ) : (
-            <div className="tpf-creem-error">
-              <p>Creem checkout could not be opened. Please try again.</p>
+            <div className="tpf-polar-error">
+              <p>Polar checkout could not be opened. Please try again.</p>
               <div className="tpf-checkout-actions">
                 <button
                   type="button"
@@ -518,7 +518,7 @@ export default function App() {
                   onClick={() => void startHostedCheckout(checkoutModal.planId, checkoutModal.billing, checkoutModal.loadingKey)}
                   disabled={checkoutLoadingKey !== null}
                 >
-                  Open Creem checkout
+                  Open Polar checkout
                 </button>
                 <button type="button" className="tpf-btn tpf-btn-ghost" onClick={() => setCheckoutModal(null)}>
                   Review plans
@@ -904,7 +904,7 @@ export default function App() {
                 <button
                   type="button"
                   className="tpf-btn tpf-btn-ghost"
-                  onClick={() => void startHostedCheckout(plan.id, billing, `${loadingKey}-wallet`, 'nowpayments')}
+                  onClick={() => void startHostedCheckout(plan.id, billing, `${loadingKey}-wallet`, 'polar')}
                   disabled={checkoutLoadingKey !== null}
                 >
                   {checkoutLoadingKey === `${loadingKey}-wallet` ? 'Opening USDC wallet...' : 'Pay with USDC Wallet'}
@@ -1005,7 +1005,7 @@ export default function App() {
         </p>
         <section>
           <h2>What we process</h2>
-          <p>We process contact details, payment metadata from Creem, support messages, and limited product analytics for reliability and conversion measurement.</p>
+          <p>We process contact details, payment metadata from Polar, support messages, and limited product analytics for reliability and conversion measurement.</p>
           <h2>Dataset fit scan</h2>
           <p>The homepage scanner runs locally in your browser from pasted rows or uploaded CSV samples until you move into a hosted workflow.</p>
           <h2>Hosted data flows</h2>
@@ -1029,7 +1029,7 @@ export default function App() {
           <h2>Independent product layer</h2>
           <p>The upstream TabPFN open-source repositories, client libraries, and model cards remain independently maintained by their respective authors.</p>
           <h2>Payments</h2>
-          <p>Payments are processed by Creem. Annual pricing is discounted as shown at checkout and the payment completion flow returns buyers to the homepage.</p>
+          <p>Payments are processed by Polar. Annual pricing is discounted as shown at checkout and the payment completion flow returns buyers to the homepage.</p>
         </section>
       </article>
     </main>

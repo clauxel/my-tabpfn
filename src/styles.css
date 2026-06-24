@@ -1085,21 +1085,21 @@ img {
   color: var(--ink);
 }
 
-.tpf-creem-loading,
-.tpf-creem-error,
-.tpf-creem-popup-copy {
+.tpf-polar-loading,
+.tpf-polar-error,
+.tpf-polar-popup-copy {
   display: grid;
   gap: 14px;
   padding-top: 10px;
 }
 
-.tpf-creem-loading {
+.tpf-polar-loading {
   justify-items: start;
   color: var(--ink);
   font-weight: 800;
 }
 
-.tpf-creem-loading span {
+.tpf-polar-loading span {
   width: 48px;
   height: 48px;
   border-radius: 999px;

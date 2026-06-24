@@ -8,12 +8,12 @@ routes = [
 ]
 
 [vars]
-CREEM_API_BASE = "https://api.creem.io"
-CREEM_ENV = "live"
+POLAR_API_BASE = "https://api.polar.sh"
+POLAR_ENV = "live"
 
-# Store one live Creem key as a Worker secret:
+# Store one live Polar key as a Worker secret:
 # wrangler secret put API_PROD_KEY
-# Accepted aliases: CREEM_API_KEY or account Secrets Store binding CREEM_KEY.
+# Accepted aliases: POLAR_API_KEY or account Secrets Store binding POLAR_KEY.
 
 [assets]
 directory = "./dist"
