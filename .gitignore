@@ -32,6 +32,7 @@
 !src/content/keyword-pages.ts
 !src/lib/
 !src/lib/dataset-fit.ts
+!src/lib/analytics.ts
 !src/lib/routing.ts
 !src/lib/seo.ts
 !scripts/

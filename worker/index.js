@@ -1,5 +1,3 @@
-import { handleAnalyticsRequest } from './analytics.js'
-import { handlePolarCheckout } from './polar.js'
 const CANONICAL_ORIGIN = 'https://tabpfn.site'
 const CANONICAL_HOST = 'tabpfn.site'
 const LEGACY_HOSTS = new Set(['www.tabpfn.site'])
@@ -316,7 +314,11 @@ async function fetchAsset(request, env) {
     const requestUrl = new URL(request.url)
 
   if (requestUrl.pathname === '/api/analytics/events') {
-    return handleAnalyticsRequest(request, env, { siteKey: 'tabpfn' })
+    if (request.method !== 'POST') {
+      return jsonResponse({ ok: false, error: 'Method not allowed.' }, 405)
+    }
+
+    return jsonResponse({ ok: true, stored: false, siteKey: 'tabpfn' })
   }
     const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
 
@@ -340,15 +342,7 @@ export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
 
   if (requestUrl.pathname === '/api/polar-checkout') {
-    return handlePolarCheckout(request, env, {
-      plans: planCatalog,
-      defaultPlanId: 'pro',
-      siteName: 'TabPFN',
-      siteKey: 'tabpfn',
-      annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
-        ? ANNUAL_DISCOUNT_MULTIPLIER
-        : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
-    })
+    return handleCheckout(request, env, requestUrl)
   }
 
   if (requestUrl.pathname === '/api/runtime') return handleRuntime(requestUrl)
